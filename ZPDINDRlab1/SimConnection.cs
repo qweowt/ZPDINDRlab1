@@ -61,6 +61,16 @@ namespace ZPDINDRlab1
         public int d1, d2, d3, d4, d5, d6, d7;
         public int d0 = 51;
         public int l0, l1, l2, l3, l4;
+        public bool simConnected = false;
+        private string status = "";
+
+        public int N = 0;
+        public int M = 0;
+        public int F = 50;
+        public int B = 50;
+        public int T = 0;
+        private string res;
+        public string result;
 
         public void DataRecieve()
         {
@@ -86,28 +96,36 @@ namespace ZPDINDRlab1
             l4 = dataR["l4"];
         }
 
+
         public SimConnection(string ip, int local, int server)
         {
             ipAdrr = ip;
             portLocal = local;
             portServer = server;
-        }
 
-        private string StartConnect()
-        {
             try
             {
                 udpClient = new UdpClient(portLocal);
 
-                return "Подключение выполнено\n";
+                status = "Подключение выполнено\n";
             }
             catch
             {
-                return "Подключение не выполнено, ошибка\n";
+                status = "Подключение не выполнено, ошибка\n";
             }
         }
 
-        private string StopConnect()
+        ~SimConnection()
+        {
+            udpClient.Dispose();
+        }
+
+        public string StatusCheck()
+        {
+            return status;
+        }
+
+        public void StopConnect()
         {
             if (udpClient != null)
             {
@@ -115,10 +133,10 @@ namespace ZPDINDRlab1
 
                 udpClient = null;
             }
-            return "Соединение разорвано\n";
+            status = "Соединение разорвано\n";
         }
 
-        private string RecieveMessage()
+        public string RecieveMessage()
         {
             try
             {
@@ -131,9 +149,9 @@ namespace ZPDINDRlab1
 
                     DataRecieve();
 
-                    return message;
+                    return message + "\n";
                 }
-                return null;
+                return "null";
             }
             catch
             {
@@ -142,8 +160,27 @@ namespace ZPDINDRlab1
                 return errmessage;
             }
         }
+        
+        public void Tick()
+        {
+            Data["N"] = N;
+            Data["B"] = B;
+            Data["F"] = F;
 
-        public string SendUDP(string dataStr)
+            dataR["n"] = Data["N"];
+
+            N++;
+            res = JsonConvert.SerializeObject(dataR, Formatting.None);
+            result = JsonConvert.SerializeObject(Data, Formatting.None);
+
+
+            //result = "{ " + @"N" + $":{N}, " + @"M" + $":{M}, " + @"F" + $":{F}, " + @"B" + $":{B}, " + @"T" + $":{T}" + "}";
+            //var mess = JsonConvert.SerializeObject(result);
+            SendUDP(res);
+            SendUDP(result);
+        }
+
+        private string SendUDP(string dataStr)
         {
             if (udpClient != null)
             {
