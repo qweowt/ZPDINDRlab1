@@ -11,6 +11,31 @@ using Newtonsoft.Json;
 
 namespace ZPDINDRlab1
 {
+    public struct RobotData
+    {
+        public int n { get; set; }
+        public int s { get; set; }
+        public int c { get; set; }
+        public int le { get; set; }
+        public int re { get; set; }
+        public int az { get; set; }
+        public int b { get; set; }
+        public int d0 { get; set; }
+        public int d1 { get; set; }
+        public int d2 { get; set; }
+        public int d3 { get; set; }
+        public int d4 { get; set; }
+        public int d5 { get; set; }
+        public int d6 { get; set; }
+        public int d7 { get; set; }
+        public int l0 { get; set; }
+        public int l1 { get; set; }
+        public int l2 { get; set; }
+        public int l3 { get; set; }
+        public int l4 { get; set; }
+        public string sp { get; set; }
+        
+    }
     public class SimConnection
     {
         public UdpClient udpClient;
@@ -40,7 +65,7 @@ namespace ZPDINDRlab1
                 { "l2", 0 },
                 { "l3", 0 },
                 { "l4", 0 },
-
+                { "sp", 0 },
             };
         public static Dictionary<string, int> Data = new Dictionary<string, int>
         {
@@ -50,29 +75,20 @@ namespace ZPDINDRlab1
             { "B", 0 },
             { "T", 0 },
         };
+        public RobotData robotData = new RobotData();
 
-        public int n;
-        public int s;
-        public int c;
-        public int le;
-        public int re;
-        public int az;
-        public int b;
-        public int d1, d2, d3, d4, d5, d6, d7;
-        public int d0 = 51;
-        public int l0, l1, l2, l3, l4;
         public bool simConnected = false;
         private string status = "";
 
         public int N = 0;
         public int M = 0;
-        public int F = 50;
-        public int B = 50;
+        public int F = 0;
+        public int B = 0;
         public int T = 0;
         private string res;
         public string result;
 
-        public void DataRecieve()
+        /*public void DataRecieve()
         {
             n = dataR["n"];
             s = dataR["s"];
@@ -94,7 +110,8 @@ namespace ZPDINDRlab1
             l2 = dataR["l2"];
             l3 = dataR["l3"];
             l4 = dataR["l4"];
-        }
+            sp = dataR["sp"];
+        }*/
 
 
         public SimConnection(string ip, int local, int server)
@@ -145,17 +162,18 @@ namespace ZPDINDRlab1
                 if (content.Length > 0)
                 {
                     string message = Encoding.ASCII.GetString(content);
-                    dataR = JsonConvert.DeserializeObject<Dictionary<string, int>>(message);
+                    robotData = JsonConvert.DeserializeObject<RobotData>(message);
 
-                    DataRecieve();
+
+                    //DataRecieve();
 
                     return message + "\n";
                 }
                 return "null";
             }
-            catch
+            catch (Exception ex) 
             {
-                string errmessage = "RemoteHost lost\n";
+                string errmessage = "RemoteHost lost\n" + ex;
 
                 return errmessage;
             }
@@ -170,12 +188,9 @@ namespace ZPDINDRlab1
             dataR["n"] = Data["N"];
 
             N++;
-            res = JsonConvert.SerializeObject(dataR, Formatting.None);
+            //res = JsonConvert.SerializeObject(dataR, Formatting.None);
             result = JsonConvert.SerializeObject(Data, Formatting.None);
 
-
-            //result = "{ " + @"N" + $":{N}, " + @"M" + $":{M}, " + @"F" + $":{F}, " + @"B" + $":{B}, " + @"T" + $":{T}" + "}";
-            //var mess = JsonConvert.SerializeObject(result);
             SendUDP(res);
             SendUDP(result);
         }
