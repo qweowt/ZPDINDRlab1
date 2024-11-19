@@ -134,15 +134,40 @@ namespace ZPDINDRlab1
                 simConnection.B = -10;
             simConnection.B = 0;
             le = simConnection.fromRobotData.le;
-            while (simConnection.fromRobotData.le - le < 1500)
+            while (simConnection.fromRobotData.le - le < 1520)
                 simConnection.F = 50;
             simConnection.F = 0;
             le = simConnection.fromRobotData.le;
-            while (simConnection.fromRobotData.le > le - 1150)
+            while (simConnection.fromRobotData.le > le - 1140)
                 simConnection.B = 10;
             simConnection.B = 0;
             le = simConnection.fromRobotData.le;
-            while (simConnection.fromRobotData.le - le < 3000)
+            while (simConnection.fromRobotData.le - le < 2480)
+                simConnection.F = 50;
+            simConnection.F = 0;
+            le = simConnection.fromRobotData.le;
+            while (simConnection.fromRobotData.le - le < 1410)
+                simConnection.B = -10;
+            simConnection.B = 0;
+            le = simConnection.fromRobotData.le;
+            while (simConnection.fromRobotData.le - le < 2500)
+                simConnection.F = 50;
+            simConnection.F = 0;
+
+            le = simConnection.fromRobotData.le;
+            while (simConnection.fromRobotData.le > le - 1480)
+                simConnection.B = 10;
+            simConnection.B = 0;
+            le = simConnection.fromRobotData.le;
+            while (simConnection.fromRobotData.le - le < 2480)
+                simConnection.F = 50;
+            simConnection.F = 0;
+            le = simConnection.fromRobotData.le;
+            while (simConnection.fromRobotData.le - le < 1410)
+                simConnection.B = -10;
+            simConnection.B = 0;
+            le = simConnection.fromRobotData.le;
+            while (simConnection.fromRobotData.le - le < 1750)
                 simConnection.F = 50;
             simConnection.F = 0;
 

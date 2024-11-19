@@ -142,7 +142,7 @@
             // 
             // SendTimer
             // 
-            SendTimer.Interval = 500;
+            SendTimer.Interval = 200;
             SendTimer.Tick += SendTimer_Tick;
             // 
             // listBox
