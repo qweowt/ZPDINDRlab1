@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace ZPDINDRlab1
 {
-    public struct RobotData
+    public struct FromRobotData
     {
         public int n { get; set; }
         public int s { get; set; }
@@ -36,6 +36,16 @@ namespace ZPDINDRlab1
         public string sp { get; set; }
         
     }
+
+    public struct ToRobotData
+    {
+        public int N { get; set; }
+        public int M { get; set; }
+        public int F { get; set; }
+        public int B { get; set; }
+        public int T { get; set; }
+    }
+
     public class SimConnection
     {
         public UdpClient udpClient;
@@ -43,30 +53,6 @@ namespace ZPDINDRlab1
         public int portServer { get; set; }
         public string ipAdrr { get; set; }
 
-        Dictionary<string, int> dataR = new Dictionary<string, int>
-            {
-                { "n", 0 },
-                { "s", 0 },
-                { "c", 0 },
-                { "le", 0 },
-                { "re", 0 },
-                { "az", 0 },
-                { "b", 0 },
-                { "d0", 51 },
-                { "d1", 0 },
-                { "d2", 0 },
-                { "d3", 0 },
-                { "d4", 0 },
-                { "d5", 0 },
-                { "d6", 0 },
-                { "d7", 0 },
-                { "l0", 0 },
-                { "l1", 0 },
-                { "l2", 0 },
-                { "l3", 0 },
-                { "l4", 0 },
-                { "sp", 0 },
-            };
         public static Dictionary<string, int> Data = new Dictionary<string, int>
         {
             { "N", 0 },
@@ -75,7 +61,8 @@ namespace ZPDINDRlab1
             { "B", 0 },
             { "T", 0 },
         };
-        public RobotData robotData = new RobotData();
+        public FromRobotData fromRobotData = new FromRobotData();
+        public ToRobotData toRobotData = new ToRobotData();
 
         public bool simConnected = false;
         private string status = "";
@@ -87,32 +74,6 @@ namespace ZPDINDRlab1
         public int T = 0;
         private string res;
         public string result;
-
-        /*public void DataRecieve()
-        {
-            n = dataR["n"];
-            s = dataR["s"];
-            c = dataR["c"];
-            le = dataR["le"];
-            re = dataR["re"];
-            az = dataR["az"];
-            b = dataR["b"];
-            d0 = dataR["d0"];
-            d1 = dataR["d1"];
-            d2 = dataR["d2"];
-            d3 = dataR["d3"];
-            d4 = dataR["d4"];
-            d5 = dataR["d5"];
-            d6 = dataR["d6"];
-            d7 = dataR["d7"];
-            l0 = dataR["l0"];
-            l1 = dataR["l1"];
-            l2 = dataR["l2"];
-            l3 = dataR["l3"];
-            l4 = dataR["l4"];
-            sp = dataR["sp"];
-        }*/
-
 
         public SimConnection(string ip, int local, int server)
         {
@@ -162,7 +123,7 @@ namespace ZPDINDRlab1
                 if (content.Length > 0)
                 {
                     string message = Encoding.ASCII.GetString(content);
-                    robotData = JsonConvert.DeserializeObject<RobotData>(message);
+                    fromRobotData = JsonConvert.DeserializeObject<FromRobotData>(message);
 
 
                     //DataRecieve();
@@ -181,15 +142,17 @@ namespace ZPDINDRlab1
         
         public void Tick()
         {
-            Data["N"] = N;
-            Data["B"] = B;
-            Data["F"] = F;
+            //Data["N"] = N;
+            //Data["B"] = B;
+            //Data["F"] = F;
 
-            dataR["n"] = Data["N"];
+            toRobotData.N = N;
+            toRobotData.B = B;
+            toRobotData.F = F;
 
             N++;
             //res = JsonConvert.SerializeObject(dataR, Formatting.None);
-            result = JsonConvert.SerializeObject(Data, Formatting.None);
+            result = JsonConvert.SerializeObject(toRobotData, Formatting.None);
 
             SendUDP(res);
             SendUDP(result);
